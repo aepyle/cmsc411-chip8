@@ -2,6 +2,15 @@
 #include <stdint.h>
 #include <stdlib.h>
 #include <string.h>
+#include <unistd.h>
+#include <SDL/SDL.h>
+
+int start = 0;
+uint16_t pc;
+uint8_t registers[16];
+uint16_t pointer;
+uint16_t stack[16];
+uint8_t sp;
 
 
 /* These functions are available to you to use in your code. */
@@ -21,8 +30,9 @@ void chip8_mem_reset(void);
 
 
 void chip8_init(void) {
-    printf("INNIT\n");
-    return;
+    pc = 0;
+
+    chip8_draw_sprite(0, 0, 0, 5);
 }
 
 void chip8_reset(void) {
@@ -30,10 +40,19 @@ void chip8_reset(void) {
 }
 
 void chip8_shutdown(void) {
-    printf("Shutting down...\n");
     return;
 }
 
 void chip8_execute_instruction(void) {
+    if (pc > 50) { return; }
+    uint16_t instruction = chip8_mem_read(pc) << 8 | chip8_mem_read(pc + 1);
+
+    uint8_t op_a = instruction >> 12;
+    uint8_t op_b = (instruction >> 8) & 0x0F00;
+
+    pc += 2;
+
+    printf("PC: %i, Instruction: %i: %i, %i\n", pc, instruction, op_a, op_b);
+
     return;
 }
